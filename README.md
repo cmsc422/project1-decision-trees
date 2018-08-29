@@ -25,6 +25,3 @@ Coming soon!
  -  ``dt.py``: Will be your simple implementation of a decision tree classifier
  - ``assignment_1b.ipynb``: Will be your edited copy of this notebook pertaining to part 1a of the assignment
  - `titanic-features.py`: This contains some functions to help you apply a decision tree to the Titanic dataset
-
-## Submission instructions
-Coming soon!

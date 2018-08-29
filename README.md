@@ -1,5 +1,6 @@
-# Homework 1: decision trees
+# Project 1: Decision trees
 (Keep an eye to this document on github. This will continue to be updated!)
+
 ## About this homework
 In this homework, you will be introduced to some basic machine learning concepts and be asked to implement and investigate decision trees. The homework will be divided into three parts.
 

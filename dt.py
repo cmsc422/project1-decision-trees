@@ -67,14 +67,6 @@ class DT(BinaryClassifier):
         ### TODO: YOUR CODE HERE
         util.raiseNotDefined()
 
-    def predictAll(self, X):
-        """
-        Make predictions for multiple samples at once.
-        """
-
-        ### TODO: YOUR CODE HERE
-        util.raiseNotDefined()
-
 
     def trainDT(self, X, Y, maxDepth, used):
         """

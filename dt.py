@@ -53,8 +53,14 @@ class DT(BinaryClassifier):
         if self.isLeaf:
             return (" " * (depth*2)) + "Leaf " + repr(self.label) + "\n"
         else:
-            return (" " * (depth*2)) + "Branch " + repr(self.feature) + "\n" + \
+            if self.opts['criterion'] == 'ig':
+                return (" " * (depth*2)) + "Branch " + repr(self.feature) + \
+                      " [Gain=" + repr(format(self.gain, '.4f')) + "]\n" + \
                       self.left.displayTree(depth+1) + \
+                      self.right.displayTree(depth+1)
+            else:
+                return (" " * (depth*2)) + "Branch " + repr(self.feature) + \
+                      "\n" + self.left.displayTree(depth+1) + \
                       self.right.displayTree(depth+1)
 
     def predict(self, X):
@@ -68,7 +74,7 @@ class DT(BinaryClassifier):
         util.raiseNotDefined()
 
 
-    def trainDT(self, X, Y, maxDepth, used):
+    def trainDT(self, X, Y, maxDepth, criterion, used):
         """
         recursively build the decision tree
         """
@@ -87,9 +93,22 @@ class DT(BinaryClassifier):
 
 
         else:
+            if criterion == 'ig': # information gain
+                # compute the entropy at this node
+                ### TODO: YOUR CODE HERE
+                self.entropy = util.raiseNotDefined()
+            
             # we need to find a feature to split on
             bestFeature = -1     # which feature has lowest error
-            bestError   = N      # the number of errors for this feature
+            
+            # use error stats or gain stats (not both) depending on criterion
+            
+            # initialize error stats
+            bestError  = np.finfo('d').max
+            
+            # initialize gain stats
+            bestGain = np.finfo('d').min
+            
             for d in range(D):
                 # have we used this feature yet
                 if d in used:
@@ -102,17 +121,29 @@ class DT(BinaryClassifier):
                 rightY = util.raiseNotDefined()    ### TODO: YOUR CODE HERE
 
 
-                # we'll classify the left points as their most
-                # common class and ditto right points.  our error
-                # is the how many are not their mode.
-                error = util.raiseNotDefined()    ### TODO: YOUR CODE HERE
-
-
-                # check to see if this is a better error rate
-                if error <= bestError:
-                    bestFeature = d
-                    bestError   = error
-
+                # misclassification rate
+                if criterion == 'mr':
+                    # we'll classify the left points as their most
+                    # common class and ditto right points.  our error
+                    # is the how many are not their mode.
+                    error = util.raiseNotDefined()    ### TODO: YOUR CODE HERE
+                    
+                    # update min, max, bestFeature
+                    if error <= bestError:
+                        bestFeature = d
+                        bestError   = error
+                        
+                # information gain
+                elif criterion == 'ig':
+                    # now use information gain
+                    gain = util.raiseNotDefined()    ### TODO: YOUR CODE HERE
+                    
+                    # update min, max, bestFeature
+                    if gain >= bestGain:
+                        bestFeature = d
+                        bestGain = gain
+            
+            self.gain = bestGain # information gain corresponding to this split
             if bestFeature < 0:
                 # this shouldn't happen, but just in case...
                 self.isLeaf = True
@@ -124,8 +155,8 @@ class DT(BinaryClassifier):
                 self.feature = util.raiseNotDefined()    ### TODO: YOUR CODE HERE
 
 
-                self.left  = DT({'maxDepth': maxDepth-1})
-                self.right = DT({'maxDepth': maxDepth-1})
+                self.left  = DT({'maxDepth': maxDepth-1, 'criterion':criterion})
+                self.right = DT({'maxDepth': maxDepth-1, 'criterion':criterion})
                 # recurse on our children by calling
                 #   self.left.trainDT(...) 
                 # and
@@ -161,7 +192,9 @@ class DT(BinaryClassifier):
         """
 
         # TODO: implement the function below
-        self.trainDT(X, Y, self.opts['maxDepth'], [])
+        if 'criterion' not in self.opts:
+          self.opts['criterion'] = 'mr' # misclassification rate
+        self.trainDT(X, Y, self.opts['maxDepth'], self.opts['criterion'], [])
 
 
     def getRepresentation(self):

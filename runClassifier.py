@@ -107,6 +107,16 @@ def plotCurve(titleString, res):
     plt.ylabel('Accuracy')
     plt.title(titleString)
     plt.show()
+    
+def plotCurvePair(titleString, res1, str1, res2, str2):
+    plt.plot(res1[0], res1[1], 'b-', res1[0], res1[2], 'r-')
+    plt.plot(res2[0], res2[1], 'c-', res2[0], res2[2], 'm-')
+    plt.legend( ('Train (' + str1 + ')', 'Test (' + str1 + ')', \
+                 'Train (' + str2 + ')', 'Test (' + str2 + ')') )
+    #xlabel('# of training points')
+    plt.ylabel('Accuracy')
+    plt.title(titleString)
+    plt.show()
 
 def shufflePoints(X, Y):
     """

@@ -25,10 +25,10 @@ def trainTest(classifier, X, Y, Xtest, Ytest):
     #print classifier
 
     Ypred = classifier.predictAll(X);               # predict the training data
-    trAcc = np.mean((Y     >= 0) == (Ypred >= 0));     # check to see how often the predictions are right
+    trAcc = np.mean((Y     > 0) == (Ypred > 0));     # check to see how often the predictions are right
 
     Ypred = classifier.predictAll(Xtest);           # predict the training data
-    teAcc = np.mean((Ytest >= 0) == (Ypred >= 0));     # check to see how often the predictions are right
+    teAcc = np.mean((Ytest > 0) == (Ypred > 0));     # check to see how often the predictions are right
 
     print("Training accuracy %g, test accuracy %g" % (trAcc, teAcc))
 
